@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#undef GTK_DISABLE_DEPRECATED
 #if defined(HAVE_CONFIG_H) && HAVE_CONFIG_H
 # include "config.h"
 #endif                          /* HAVE_CONFIG_H */

@@ -1523,8 +1523,6 @@ libbalsa_mailbox_mbox_sync(LibBalsaMailbox * mailbox, gboolean expunge)
 
 	if (msg_info->status >= 0) {
 	    status_len = lbm_mbox_line_len(mbox, msg_info->status);
-	    if (status_len < 0)
-		break;
 	} else {
             msg_info->status = msg_info->mime_version >= 0 ?
 		msg_info->mime_version :
@@ -1535,8 +1533,6 @@ libbalsa_mailbox_mbox_sync(LibBalsaMailbox * mailbox, gboolean expunge)
 
 	if (msg_info->x_status >= 0) {
 	    x_status_len = lbm_mbox_line_len(mbox, msg_info->x_status);
-	    if (x_status_len < 0)
-		break;
 	} else {
 	    msg_info->x_status = msg_info->status;
 	    x_status_len = 0;

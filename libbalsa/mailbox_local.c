@@ -435,7 +435,7 @@ libbalsa_mailbox_local_load_config(LibBalsaMailbox * mailbox,
 
 typedef struct {
     GArray * array;
-    guint (*fileno)(LibBalsaMailboxLocal * local, guint msgno);
+    guint (*filenum)(LibBalsaMailboxLocal * local, guint msgno);
     LibBalsaMailboxLocal *local;
 } LibBalsaMailboxLocalSaveTreeInfo;
 
@@ -459,9 +459,9 @@ lbm_local_save_tree_item(guint msgno, guint a,
     if (msgno == 0) {
         info.msgno = msgno;
         info.value.total = a;
-    } else if (save_info->fileno) {
-        info.msgno = save_info->fileno(save_info->local, msgno);
-        info.value.parent = save_info->fileno(save_info->local, a);
+    } else if (save_info->filenum) {
+        info.msgno = save_info->filenum(save_info->local, msgno);
+        info.value.parent = save_info->filenum(save_info->local, a);
     } else {
         info.msgno = msgno;
         info.value.parent = a;
@@ -519,7 +519,7 @@ lbm_local_save_tree(LibBalsaMailboxLocal * local)
         return;
     }
 
-    save_info.fileno = LIBBALSA_MAILBOX_LOCAL_GET_CLASS(local)->fileno;
+    save_info.filenum = LIBBALSA_MAILBOX_LOCAL_GET_CLASS(local)->filenum;
     save_info.local = local;
     save_info.array =
         g_array_new(FALSE, FALSE, sizeof(LibBalsaMailboxLocalTreeInfo));

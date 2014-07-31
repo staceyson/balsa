@@ -17,7 +17,7 @@
 #include "config.h"
 
 #define _POSIX_C_SOURCE 199506L
-#define _XOPEN_SOURCE 500
+#define _XOPEN_SOURCE 600
 #define _BSD_SOURCE     1
 
 #include <sys/types.h>
@@ -3253,7 +3253,8 @@ imap_get_address(struct siobuf* sio)
   
   for(i=0; i<4; i++) {
     addr[i] = imap_get_nstring(sio);
-    if( (c=sio_getc(sio)) != ' '); /* error if i < 3 but do nothing */
+    if( (c=sio_getc(sio)) != ' ')
+      ; /* error if i < 3 but do nothing */
   }
 
   if (addr[0] && (p = strchr(addr[0], '\r'))) {

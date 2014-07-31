@@ -17,6 +17,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
+#undef GTK_DISABLE_DEPRECATED
 #if defined(HAVE_CONFIG_H) && HAVE_CONFIG_H
 # include "config.h"
 #endif                          /* HAVE_CONFIG_H */
@@ -396,7 +397,7 @@ balsa_handle_automation_options() {
 
        if (cmd_line_open_mailboxes)
 	   GNOME_Balsa_Application_openMailbox (app,
-					       cmd_line_open_mailboxes,
+					       *cmd_line_open_mailboxes,
 					       &ev);
 
        if (opt_compose_email || opt_attach_list) {

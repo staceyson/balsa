@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
-#define _XOPEN_SOURCE 500
+#define _XOPEN_SOURCE 600
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -138,7 +138,7 @@ imap_mbox_handle_can_do(ImapMboxHandle* handle, ImapCapability cap)
   if(!handle->has_capabilities)
     imap_check_capability(handle);
 
-  if(cap>=0 && cap<IMCAP_MAX)
+  if(cap<IMCAP_MAX)
     return handle->capabilities[cap];
   else return 0;
 }

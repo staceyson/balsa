@@ -310,8 +310,10 @@ lbm_mh_get_info(LibBalsaMailboxLocal * local, guint msgno)
 
     msg_info = lbm_mh_message_info_from_msgno(LIBBALSA_MAILBOX_MH(local),
 					      msgno);
+/* XXX always false
     if (msg_info->local_info.flags == INVALID_FLAG)
         msg_info->local_info.flags = msg_info->orig_flags;
+*/
 
     return &msg_info->local_info;
 }
@@ -757,8 +759,10 @@ static void
 lbm_mh_flag_line(struct message_info *msg_info, LibBalsaMessageFlag flag,
 		 struct line_info *li)
 {
+/* XXX always false
     if (msg_info->local_info.flags == INVALID_FLAG)
 	msg_info->local_info.flags = msg_info->orig_flags;
+*/
     if (!(msg_info->local_info.flags & flag))
 	return;
 
@@ -830,8 +834,10 @@ libbalsa_mailbox_mh_sync(LibBalsaMailbox * mailbox, gboolean expunge)
     msgno = 1;
     while (msgno <= mh->msgno_2_msg_info->len) {
 	msg_info = lbm_mh_message_info_from_msgno(mh, msgno);
+/* XXX always false
 	if (msg_info->local_info.flags == INVALID_FLAG)
 	    msg_info->local_info.flags = msg_info->orig_flags;
+*/
 	if (mailbox->state == LB_MAILBOX_STATE_CLOSING)
 	    msg_info->local_info.flags &= ~LIBBALSA_MESSAGE_FLAG_RECENT;
 

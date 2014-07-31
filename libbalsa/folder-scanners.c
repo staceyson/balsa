@@ -22,6 +22,7 @@
 #endif                          /* HAVE_CONFIG_H */
 #include "folder-scanners.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>

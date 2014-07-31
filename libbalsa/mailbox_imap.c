@@ -3153,7 +3153,7 @@ libbalsa_mailbox_imap_can_do(LibBalsaMailbox* mbox,
 static ImapSortKey
 lbmi_get_imap_sort_key(LibBalsaMailbox *mbox)
 {
-    ImapSortKey key = LB_MBOX_FROM_COL;
+    ImapSortKey key = IMSO_FROM;
 
     switch (mbox->view->sort_field) {
     default:

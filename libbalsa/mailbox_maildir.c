@@ -47,7 +47,7 @@ struct message_info {
     /* The message's order when parsing; needed for saving the message
      * tree in a form that will match the msgnos when the mailbox is
      * reopened. */
-    guint fileno;
+    guint filenum;
 };
 #define REAL_FLAGS(flags) ((flags) & LIBBALSA_MESSAGE_FLAGS_REAL)
 #define FLAGS_REALLY_DIFFER(orig_flags, flags) \
@@ -97,7 +97,7 @@ static gint lbm_maildir_check_files(const gchar * path, gboolean create);
 static void lbm_maildir_set_path(LibBalsaMailboxLocal * local,
                                  const gchar * path);
 static void lbm_maildir_remove_files(LibBalsaMailboxLocal * local);
-static guint lbm_maildir_fileno(LibBalsaMailboxLocal * local, guint msgno);
+static guint lbm_maildir_filenum(LibBalsaMailboxLocal * local, guint msgno);
 static LibBalsaMailboxLocalMessageInfo
     *lbm_maildir_get_info(LibBalsaMailboxLocal * local, guint msgno);
 
@@ -173,7 +173,7 @@ libbalsa_mailbox_maildir_class_init(LibBalsaMailboxMaildirClass * klass)
     libbalsa_mailbox_local_class->check_files  = lbm_maildir_check_files;
     libbalsa_mailbox_local_class->set_path     = lbm_maildir_set_path;
     libbalsa_mailbox_local_class->remove_files = lbm_maildir_remove_files;
-    libbalsa_mailbox_local_class->fileno       = lbm_maildir_fileno;
+    libbalsa_mailbox_local_class->filenum      = lbm_maildir_filenum;
     libbalsa_mailbox_local_class->get_info     = lbm_maildir_get_info;
 }
 
@@ -388,7 +388,7 @@ static LibBalsaMessageFlag parse_filename(const gchar *subdir,
 }
 
 static void lbm_maildir_parse(LibBalsaMailboxMaildir * mdir,
-                              const gchar *subdir, guint * fileno)
+                              const gchar *subdir, guint * filenum)
 {
     gchar *path;
     GDir *dir;
@@ -441,12 +441,12 @@ static void lbm_maildir_parse(LibBalsaMailboxMaildir * mdir,
 	    msg_info->key=key;
 	    msg_info->filename=g_strdup(filename);
 	    msg_info->local_info.flags = msg_info->orig_flags = flags;
-	    msg_info->fileno = 0;
+	    msg_info->filenum = 0;
 	}
 	msg_info->subdir = subdir;
-        if (!msg_info->fileno)
+        if (!msg_info->filenum)
             /* First time we saw this key. */
-	    msg_info->fileno = ++*fileno;
+	    msg_info->filenum = ++*filenum;
     }
     g_dir_close(dir);
 }
@@ -454,21 +454,21 @@ static void lbm_maildir_parse(LibBalsaMailboxMaildir * mdir,
 static void
 lbm_maildir_parse_subdirs(LibBalsaMailboxMaildir * mdir)
 {
-    guint msgno, fileno = 0;
+    guint msgno, filenum = 0;
 
     for (msgno = mdir->msgno_2_msg_info->len; msgno > 0; --msgno) {
         struct message_info *msg_info =
             message_info_from_msgno(mdir, msgno);
-        msg_info->fileno = 0;
+        msg_info->filenum = 0;
     }
 
-    lbm_maildir_parse(mdir, "cur", &fileno);
+    lbm_maildir_parse(mdir, "cur", &filenum);
     /* We parse "new" after "cur", so that any recent messages will have
      * higher msgnos than any current messages. That ensures that the
      * message tree saved by LibBalsaMailboxLocal is still valid, and
      * that the new messages will be inserted correctly into the tree by
      * libbalsa_mailbox_local_add_messages. */
-    lbm_maildir_parse(mdir, "new", &fileno);
+    lbm_maildir_parse(mdir, "new", &filenum);
 }
 
 static gboolean
@@ -817,7 +817,7 @@ libbalsa_mailbox_maildir_sync(LibBalsaMailbox * mailbox, gboolean expunge)
     if (changes) {              /* Record mtime of dir. */
         struct stat st;
 
-        /* Reparse, to get the fileno entries right. */
+        /* Reparse, to get the filenum entries right. */
         lbm_maildir_parse_subdirs(mdir);
         mailbox->msg_tree_changed = TRUE;
 
@@ -859,7 +859,7 @@ libbalsa_mailbox_maildir_fetch_message_structure(LibBalsaMailbox * mailbox,
 }
 
 static guint
-lbm_maildir_fileno(LibBalsaMailboxLocal * local, guint msgno)
+lbm_maildir_filenum(LibBalsaMailboxLocal * local, guint msgno)
 {
     struct message_info *msg_info;
 
@@ -869,7 +869,7 @@ lbm_maildir_fileno(LibBalsaMailboxLocal * local, guint msgno)
     msg_info =
         message_info_from_msgno((LibBalsaMailboxMaildir *) local, msgno);
 
-    return msg_info->fileno;
+    return msg_info->filenum;
 }
 
 static LibBalsaMailboxLocalMessageInfo *

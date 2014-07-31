@@ -645,8 +645,6 @@ process_options(int argc, char *argv[])
 
 int
 main(int argc, char *argv[]) {
-  g_type_init();
-
   if(argc<=1) {
     test_envelope_strings();
     test_body_strings();
